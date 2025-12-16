@@ -16,6 +16,12 @@ Windows:
 - Copie o arquivo nxlog.conf para o diretorio "conf" da instalação do agente ( %ProgramFiles%\nxlog\conf );
 - Altere o parametro "Host 99.99.99.99" informando o IP do servidor de syslog;
 - Reinicie o serviço do NXLog;
+- Abra o Group Policy Manager e edite a GPO "Default Domain Controllers Policy" ou crie uma nova GPO e aplique na OU "Domain Controllers"
+- Localize e altere os parametros no "Computer Configuration" -> "Policies" -> "Windows Settings" -> "Security Settings" -> "Local Policies" -> "Audit Policy" conforme imagem abaixo
+
+
+<img width="876" height="302" alt="image" src="https://github.com/user-attachments/assets/67fffa91-369a-4356-ba28-24130864b0a0" />
+
 
 Linux:
 - Remova o pacote rsyslog;
@@ -28,4 +34,4 @@ Linux:
 - Ative e reinicie o daemon do syslog-ng;
 - Nesse momento o servidor deve começar a criar arquivos no /opt/int_user_login/tmp/ com os dados dos logins efetuados;
 
-<img width="876" height="302" alt="image" src="https://github.com/user-attachments/assets/67fffa91-369a-4356-ba28-24130864b0a0" />
+
