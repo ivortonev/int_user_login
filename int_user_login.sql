@@ -12,3 +12,12 @@ CREATE TABLE `login` (
   `source_ip` varchar(42) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf16 COLLATE=utf16_unicode_ci;
 COMMIT;
+
+--
+-- Indexes for table `login`
+--
+
+ALTER TABLE `login`
+  ADD KEY `time` (`time`),
+  ADD KEY `login` (`login`);
+COMMIT;
