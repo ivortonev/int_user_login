@@ -1,5 +1,7 @@
 # !!!! Atenção - esse projeto esá em fase inicial e não está pronto para produção. !!!!
 
+Objetivo do projeto: Um firewall OPNSense/PFSense poder criar alias atraves de consulta web com o IP da estação de qual um usuario efetuou login para criação de regras.
+
 
 Pré-requisitos:
 
