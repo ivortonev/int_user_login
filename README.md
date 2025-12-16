@@ -1,3 +1,6 @@
+# !!!! Atenção - esse projeto esá em fase inicial e não está pronto para produção. !!!!
+
+
 Pré-requisitos:
 
 Para o servidor Microsoft AD: NXLog - https://nxlog.co/downloads/nxlog-ce#nxlog-community-edition
@@ -9,6 +12,8 @@ Para o servidor de log:
   - MySQL ou MariaDB
   - syslog-ng
 
+
+
 Processo de instalação:
 
 Windows:
@@ -17,7 +22,7 @@ Windows:
 - Altere o parametro "Host 99.99.99.99" informando o IP do servidor de syslog;
 - Reinicie o serviço do NXLog;
 - Abra o Group Policy Manager e edite a GPO "Default Domain Controllers Policy" ou crie uma nova GPO e aplique na OU "Domain Controllers"
-- Localize e altere os parametros no "Computer Configuration" -> "Policies" -> "Windows Settings" -> "Security Settings" -> "Local Policies" -> "Audit Policy" conforme imagem abaixo
+- Localize e altere os parametros no "Computer Configuration" -> "Policies" -> "Windows Settings" -> "Security Settings" -> "Local Policies" -> "Audit Policy" conforme imagem abaixo e aguarde a replicação da GPO;
 
 
 <img width="876" height="302" alt="image" src="https://github.com/user-attachments/assets/67fffa91-369a-4356-ba28-24130864b0a0" />
