@@ -24,3 +24,4 @@ for i in adlog-* ; do
 done
 
 sort -n $TEMPDIR/login_sources | uniq >> $TEMPDIR/login_sources.ok
+cat $TEMPDIR/login_sources.ok
