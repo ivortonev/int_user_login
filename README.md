@@ -2,6 +2,24 @@
 
 Objetivo do projeto: Um firewall OPNSense/PFSense poder criar alias atraves de consulta web com o IP da estação de qual um usuario efetuou login para criação de regras.
 
+Fluxo simplificado:
+- Ususário loga no Active Directory;
+- O agente do nxlog captura o evento e envia em formato JSON via syslog para um servidor Linux;
+- O servidor Linux recebe o log e o salva em arquivo individual;
+- Através de agendamento no CRON um script em BASH analisa arquivo por arquivo e extrai as informações de login e IP da maquina onde o usuário efetuou o login e salva em outro arquivo temporario;
+- No final do processamento os registros de login:ip são filtrados para valores únicos;
+- No final do script BASH é executado um script PHP para leitura dos valores únicos de login:ip para inserção em banco de dados, adicionando um valor extra de tempo de expiração da sessão;
+  - Caso existir registro de sessão com o mesmo login e ip, a expiração é atualizada;
+  - Caso não existir registro, o mesmo é criado, permitindo vários IPs de origem para um usuario;
+- Através de agendamento no CRON é executado um script em PHP que exclui todas as sessões expiradas.
+- O firewall consulta atraves da URL https://[servidor/user.php?login=[usuario] a lista de IPs com sessões validas e armazena o valor em um ALIAS que é usado para criação das regras;
+- Se não existir uma sessão válida registrada no banco de dados, é retornado o ip 99.99.99.99.
+
+  
+TO-DO
+- Criação de tabela de log para consultas futuras dos IPs a partir de quais um usuário logou, como inicio e fim de sessão;
+- Limpeza do codigo. No momento foi feito para prover a funcionalidade, sem preocupação com boas praticas de desenvolvimento;
+- ( mais ideia futuras )
 
 Pré-requisitos:
 
