@@ -19,6 +19,7 @@ Fluxo simplificado:
 TO-DO
 - Criação de tabela de log para consultas futuras dos IPs a partir de quais um usuário logou, como inicio e fim de sessão;
 - Limpeza do codigo. No momento foi feito para prover a funcionalidade, sem preocupação com boas praticas de desenvolvimento;
+- Criar script para instalação;
 - ( mais ideia futuras )
 
 Pré-requisitos:
