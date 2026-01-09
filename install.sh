@@ -24,7 +24,7 @@ WEB_DIR="/usr/share/nginx/html"
 # Installing pre-reqs
 $CMD_YUM clean all
 $CMD_YUM update -y
-$CMD_YUM install -y epel-release
+$CMD_YUM install epel-release 
 $CMD_YUM clean all
 $CMD_YUM update
 $CMD_YUM install -y nginx bind-utils php-common php-cli php-fpm php-process php-pdo php-mysqlnd php-mbstring php-intl php-pecl-zip php-xml php-gd jq syslog-ng mariadb-common mariadb-client-utils mariadb mariadb-server-utils mariadb-server
@@ -50,9 +50,9 @@ fi
 $CMD_MV -f $SNG_DIR/syslog-ng.conf $SNG_DIR/syslog-ng.conf.orig
 $CMD_CURL -o $SNG_DIR/syslog-ng.conf		https://raw.githubusercontent.com/ivortonev/int_user_login/refs/heads/main/syslog-ng.conf
 $CMD_CHMOD 644 $SNG_DIR/syslog-ng.conf
-$CMD_SYSTEMCTL enable syslog-ng.service nginx.service
-$CMD_SYSTEMCTL stop syslog-ng.service nginx.service
-$CMD_SYSTEMCTL start syslog-ng.service nginx.service
+$CMD_SYSTEMCTL enable syslog-ng.service nginx.service mariadb.service php-fpm.service
+$CMD_SYSTEMCTL stop syslog-ng.service nginx.service mariadb.service php-fpm.service
+$CMD_SYSTEMCTL start syslog-ng.service nginx.service mariadb.service php-fpm.service
 
 $CMD_MKDIR -m 755 $PRJ_DIR
 $CMD_CURL -o $PRJ_DIR/int_user_login.sql	https://raw.githubusercontent.com/ivortonev/int_user_login/refs/heads/main/int_user_login.sql
@@ -77,9 +77,10 @@ $CMD_CP $PHP_DIR/conf.php $WEB_DIR/conf.php
 $CMD_CHMOD 600 $PHP_DIR/conf.php
 $CMD_CHMOD 640 $WEB_DIR/conf.php
 $CMD_CHMOD 600 $PHP_DIR/expire.php
-$CMD_CHMOD 750 $WEB_DIR/user.php
+$CMD_CHMOD 640 $WEB_DIR/user.php
 $CMD_CHMOD 600 $PHP_DIR/user_data.php
-$CMD_CHOWN root:nginx $WEB_DIR/conf.php
+$CMD_CHOWN root:apache $WEB_DIR/conf.php
+$CMD_CHOWN root:apache $WEB_DIR/user.php
 $CMD_ECHO "Edit $PHP_DIR/conf.php and $WEB_DIR/conf.php to change the database credencials"
 
 $CMD_MKDIR -m 700 $TMP_DIR
