@@ -22,7 +22,7 @@ WEB_DIR="/usr/share/nginx/html"
 
 # Installing pre-reqs
 $CMD_YUM clean all
-$CMD_YUM update
+$CMD_YUM update -y
 $CMD_YUM install -y epel-release
 $CMD_YUM clean all
 $CMD_YUM update
