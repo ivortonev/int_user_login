@@ -24,7 +24,7 @@ WEB_DIR="/usr/share/nginx/html"
 # Installing pre-reqs
 $CMD_YUM clean all
 $CMD_YUM update -y
-$CMD_YUM install epel-release 
+$CMD_YUM install -y epel-release 
 $CMD_YUM clean all
 $CMD_YUM update
 $CMD_YUM install -y nginx bind-utils php-common php-cli php-fpm php-process php-pdo php-mysqlnd php-mbstring php-intl php-pecl-zip php-xml php-gd jq syslog-ng mariadb-common mariadb-client-utils mariadb mariadb-server-utils mariadb-server
