@@ -2,4 +2,4 @@
 
 MSG=$*
 
-echo "$MSG"
+/usr/bin/echo "$MSG"
