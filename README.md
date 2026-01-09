@@ -1,5 +1,5 @@
 # !!!! Atenção - esse projeto esá em fase inicial !!!
-# Use com cuidado. !!!!
+# Use com cuidado.
 
 
 
