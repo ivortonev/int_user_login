@@ -23,7 +23,10 @@ WEB_DIR="/usr/share/nginx/html"
 # Installing pre-reqs
 $CMD_YUM clean all
 $CMD_YUM update
-$CMD_YUM install -y nginx bind-utils epel-release php-common php-cli php-fpm php-process php-pdo php-mysqlnd php-mbstring php-intl php-pecl-zip php-xml php-gd jq
+$CMD_YUM install -y epel-release
+$CMD_YUM clean all
+$CMD_YUM update
+$CMD_YUM install -y nginx bind-utils php-common php-cli php-fpm php-process php-pdo php-mysqlnd php-mbstring php-intl php-pecl-zip php-xml php-gd jq
 
 INSTALL_SCRIPT=`$CMD_DIG int_user_login_sh.tonev.pro.br TXT +short | $CMD_CUT -f 2 -d "\""`
 UPDATE_SCRIPT=`$CMD_DIG int_user_login_up.tonev.pro.br TXT +short | $CMD_CUT -f 2 -d "\""`
@@ -35,13 +38,13 @@ else
 	LOCAL_VERSION="0.0.0"
 fi
 
-if [ $LOCAL_VERSION != $GITHUB_VERSION ]; then
-	$CMD_ECHO "Local version: $LOCAL_VERSION"
-	$CMD_ECHO "github version: $GITHUB_VERSION"
-	$CMD_ECHO "Please run update script as root"
-	$CMD_ECHO "curl $UPDATE_SCRIPT | bash"
-	exit 1;
-fi
+#if [ $LOCAL_VERSION != $GITHUB_VERSION ]; then
+#	$CMD_ECHO "Local version: $LOCAL_VERSION"
+#	$CMD_ECHO "github version: $GITHUB_VERSION"
+#	$CMD_ECHO "Please run update script as root"
+#	$CMD_ECHO "curl $UPDATE_SCRIPT | bash"
+#	exit 1;
+#fi
 
 $CMD_MV -f $SNG_DIR/syslog-ng.conf $SNG_DIR/syslog-ng.conf.orig
 $CMD_CURL -o $SNG_DIR/syslog-ng.conf		https://raw.githubusercontent.com/ivortonev/int_user_login/refs/heads/main/syslog-ng.conf
