@@ -27,7 +27,7 @@ $CMD_YUM update -y
 $CMD_YUM install -y epel-release
 $CMD_YUM clean all
 $CMD_YUM update
-$CMD_YUM install -y nginx bind-utils php-common php-cli php-fpm php-process php-pdo php-mysqlnd php-mbstring php-intl php-pecl-zip php-xml php-gd jq
+$CMD_YUM install -y nginx bind-utils php-common php-cli php-fpm php-process php-pdo php-mysqlnd php-mbstring php-intl php-pecl-zip php-xml php-gd jq syslog-ng mariadb-common mariadb-client-utils mariadb mariadb-server-utils mariadb-server
 
 INSTALL_SCRIPT=`$CMD_DIG int_user_login_sh.tonev.pro.br TXT +short | $CMD_CUT -f 2 -d "\""`
 UPDATE_SCRIPT=`$CMD_DIG int_user_login_up.tonev.pro.br TXT +short | $CMD_CUT -f 2 -d "\""`
