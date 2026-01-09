@@ -58,7 +58,7 @@ Windows:
 
 
 
-Linux ( :
+Linux:
 - Execute como root "curl https://raw.githubusercontent.com/ivortonev/int_user_login/refs/heads/main/install.sh | bash";
 - No MySQL/MariaDB crie banco, usuario e senha;
 - Importe o arquivo .sql ( o script de instalação informa )
