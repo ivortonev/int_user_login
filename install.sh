@@ -21,6 +21,8 @@ SNG_DIR="/etc/syslog-ng"
 WEB_DIR="/usr/share/nginx/html"
 
 # Installing pre-reqs
+$CMD_YUM clean all
+$CMD_YUM update
 $CMD_YUM install -y nginx bind-utils epel-release php-common php-cli php-fpm php-process php-pdo php-mysqlnd php-mbstring php-intl php-pecl-zip php-xml php-gd jq
 
 INSTALL_SCRIPT=`$CMD_DIG int_user_login_sh.tonev.pro.br TXT +short | $CMD_CUT -f 2 -d "\""`
