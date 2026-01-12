@@ -63,3 +63,10 @@ Linux:
 - No MySQL/MariaDB crie banco, usuario e senha;
 - Importe o arquivo .sql ( o script de instalação informa )
 
+
+Para testar:
+- Baixe os dois arquivos que estão no "example_log" para o diretório "/opt/int_user_login/tmp";
+- Aguarde a proxima execução do CRON;
+- Execute "http://localhost/user.php?login=Administrator". A saida deve ser
+<img width="470" height="86" alt="curl_test" src="https://github.com/user-attachments/assets/7883d472-5943-43e9-8c7f-11372bbf60e5" />
+
