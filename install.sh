@@ -13,6 +13,11 @@ CMD_MV="/usr/bin/mv"
 CMD_SYSTEMCTL="/usr/bin/systemctl"
 CMD_CP="/usr/bin/cp"
 CMD_CHOWN="/usr/bin/chown"
+CMD_PWGEN="/usr/bin/pwgen -c -n -s 32 1"
+CMD_MYSQLADMIN="/usr/bin/mysqladmin"
+CMD_MYSQL="/usr/bin/mysql"
+CMD_RM="/usr/bin/rm"
+CMD_SED="/usr/bin/sed"
 
 PRJ_DIR="/opt/int_user_login"
 BIN_DIR="$PRJ_DIR/bin"
@@ -47,6 +52,15 @@ fi
 #	exit 1;
 #fi
 
+MYSQL_ROOT_PASSWORD=`$CMD_PWGEN`
+MYSQL_USER_PASSWORD=`$CMD_PWGEN`
+
+$CMD_ECHO -n "Please choose a username for the SQL database: " 
+read USER_LOGIN
+
+$CMD_ECHO -n "Please choose a name for the SQL database: "
+read MYSQL_DB_NAME
+
 $CMD_MV -f $SNG_DIR/syslog-ng.conf $SNG_DIR/syslog-ng.conf.orig
 $CMD_CURL -o $SNG_DIR/syslog-ng.conf		https://raw.githubusercontent.com/ivortonev/int_user_login/refs/heads/main/syslog-ng.conf
 $CMD_CHMOD 644 $SNG_DIR/syslog-ng.conf
@@ -59,8 +73,6 @@ $CMD_CURL -o $PRJ_DIR/int_user_login.sql	https://raw.githubusercontent.com/ivort
 $CMD_CURL -o $PRJ_DIR/version			https://raw.githubusercontent.com/ivortonev/int_user_login/refs/heads/main/version
 $CMD_CHMOD 600 $PRJ_DIR/int_user_login.sql
 $CMD_CHMOD 600 $PRJ_DIR/version
-$CMD_ECHO "Use $PRJ_DIR/int_user_login.sql to crate a MySQL database"
-$CMD_ECHO "and create/assign a user for SQL access"
 
 $CMD_MKDIR -m 755 $BIN_DIR
 $CMD_CURL -o $BIN_DIR/ingest_int_user_login.sh	https://raw.githubusercontent.com/ivortonev/int_user_login/refs/heads/main/ingest_int_user_login.sh
@@ -73,15 +85,27 @@ $CMD_CURL -o $PHP_DIR/conf.php			https://raw.githubusercontent.com/ivortonev/int
 $CMD_CURL -o $PHP_DIR/expire.php		https://raw.githubusercontent.com/ivortonev/int_user_login/refs/heads/main/expire.php
 $CMD_CURL -o $WEB_DIR/user.php			https://raw.githubusercontent.com/ivortonev/int_user_login/refs/heads/main/user.php
 $CMD_CURL -o $PHP_DIR/user_data.php		https://raw.githubusercontent.com/ivortonev/int_user_login/refs/heads/main/user_data.php
+$CMD_SED -e "s/SQL_USER_LOGIN/$USER_LOGIN/g" $PHP_DIR/conf.php | $CMD_SED -e "s/SQL_USER_PASSWD/$MYSQL_USER_PASSWORD/g" | $CMD_SED -e "s/SQL_DATABASE/$MYSQL_DB_NAME/g" > $PHP_DIR/conf.php.tmp
+$CMD_MV -f $PHP_DIR/conf.php.tmp $PHP_DIR/conf.php
 $CMD_CP $PHP_DIR/conf.php $WEB_DIR/conf.php
 $CMD_CHMOD 600 $PHP_DIR/conf.php
-$CMD_CHMOD 640 $WEB_DIR/conf.php
+$CMD_CHMOD 640 $PHP_DIR/conf.php
 $CMD_CHMOD 600 $PHP_DIR/expire.php
 $CMD_CHMOD 640 $WEB_DIR/user.php
 $CMD_CHMOD 600 $PHP_DIR/user_data.php
 $CMD_CHOWN root:apache $WEB_DIR/conf.php
 $CMD_CHOWN root:apache $WEB_DIR/user.php
-$CMD_ECHO "Edit $PHP_DIR/conf.php and $WEB_DIR/conf.php to change the database credencials"
+ 
+$CMD_MYSQLADMIN password $MYSQL_ROOT_PASSWORD
+$CMD_MYSQLADMIN create $MYSQL_DB_NAME
+
+$CMD_ECHO "CREATE USER '$USER_LOGIN'@'localhost' IDENTIFIED BY '$MYSQL_USER_PASSWORD';" > $TMP_DIR/init.sql
+$CMD_ECHO "CREATE DATABASE $MYSQL_DB_NAME;" >> $TMP_DIR/init.sql
+$CMD_ECHO "GRANT ALL PRIVILEGES ON $MYSQL_DB_NAME.* TO '$USER_LOGIN'@'localhost';" >> $TMP_DIR/init.sql
+$CMD_ECHO "commit;" >> $TMP_DIR/init.sql
+$CMD_MYSQL < $TMP_DIR/init.sql
+$CMD_MYSQL $MYSQL_DB_NAME < $PRJ_DIR/int_user_login.sql
+$CMD_RM -f $TMP_DIR/init.sql
 
 $CMD_MKDIR -m 700 $TMP_DIR
 
