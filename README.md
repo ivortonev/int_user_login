@@ -60,8 +60,7 @@ Windows:
 
 Linux:
 - Execute como root "curl https://raw.githubusercontent.com/ivortonev/int_user_login/refs/heads/main/install.sh | bash";
-- No MySQL/MariaDB crie banco, usuario e senha;
-- Importe o arquivo .sql ( o script de instalação informa )
+
 
 
 Para testar:
@@ -69,4 +68,9 @@ Para testar:
 - Aguarde a proxima execução do CRON;
 - Execute "http://localhost/user.php?login=Administrator". A saida deve ser
 <img width="470" height="86" alt="curl_test" src="https://github.com/user-attachments/assets/7883d472-5943-43e9-8c7f-11372bbf60e5" />
+
+
+No firewall é necessário criar alias com o Login do usuário e apontar para o serviço HTTP do servidor de log
+<img width="638" height="439" alt="user_alias" src="https://github.com/user-attachments/assets/e11ee8de-2e68-4fc6-b2ef-a76b619d38b0" />
+
 
