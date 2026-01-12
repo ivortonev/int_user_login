@@ -18,6 +18,7 @@ CMD_MYSQLADMIN="/usr/bin/mysqladmin"
 CMD_MYSQL="/usr/bin/mysql"
 CMD_RM="/usr/bin/rm"
 CMD_SED="/usr/bin/sed"
+CMD_CRB="/usr/bin/crb"
 
 PRJ_DIR="/opt/int_user_login"
 BIN_DIR="$PRJ_DIR/bin"
@@ -30,9 +31,9 @@ WEB_DIR="/usr/share/nginx/html"
 $CMD_YUM clean all
 $CMD_YUM update -y
 $CMD_YUM install -y epel-release 
-$CMD_YUM clean all
+$CMD_CRB enable
 $CMD_YUM update
-$CMD_YUM install -y nginx bind-utils php-common php-cli php-fpm php-process php-pdo php-mysqlnd php-mbstring php-intl php-pecl-zip php-xml php-gd jq syslog-ng mariadb-common mariadb-client-utils mariadb mariadb-server-utils mariadb-server
+$CMD_YUM install -y nginx bind-utils php-common php-cli php-fpm php-process php-pdo php-mysqlnd php-mbstring php-intl php-pecl-zip php-xml php-gd jq syslog-ng mariadb-common mariadb-client-utils mariadb mariadb-server-utils mariadb-server pwgen
 
 INSTALL_SCRIPT=`$CMD_DIG int_user_login_sh.tonev.pro.br TXT +short | $CMD_CUT -f 2 -d "\""`
 UPDATE_SCRIPT=`$CMD_DIG int_user_login_up.tonev.pro.br TXT +short | $CMD_CUT -f 2 -d "\""`
@@ -43,14 +44,6 @@ if [ -f "$PRJ_DIR/version" ]; then
 else
 	LOCAL_VERSION="0.0.0"
 fi
-
-#if [ $LOCAL_VERSION != $GITHUB_VERSION ]; then
-#	$CMD_ECHO "Local version: $LOCAL_VERSION"
-#	$CMD_ECHO "github version: $GITHUB_VERSION"
-#	$CMD_ECHO "Please run update script as root"
-#	$CMD_ECHO "curl $UPDATE_SCRIPT | bash"
-#	exit 1;
-#fi
 
 MYSQL_ROOT_PASSWORD=`$CMD_PWGEN`
 MYSQL_USER_PASSWORD=`$CMD_PWGEN`
@@ -87,7 +80,7 @@ $CMD_CURL -o $WEB_DIR/user.php			https://raw.githubusercontent.com/ivortonev/int
 $CMD_CURL -o $PHP_DIR/user_data.php		https://raw.githubusercontent.com/ivortonev/int_user_login/refs/heads/main/user_data.php
 $CMD_SED -e "s/SQL_USER_LOGIN/$USER_LOGIN/g" $PHP_DIR/conf.php | $CMD_SED -e "s/SQL_USER_PASSWD/$MYSQL_USER_PASSWORD/g" | $CMD_SED -e "s/SQL_DATABASE/$MYSQL_DB_NAME/g" > $PHP_DIR/conf.php.tmp
 $CMD_MV -f $PHP_DIR/conf.php.tmp $PHP_DIR/conf.php
-$CMD_CP $PHP_DIR/conf.php $WEB_DIR/conf.php
+$CMD_CP -f $PHP_DIR/conf.php $WEB_DIR/conf.php
 $CMD_CHMOD 600 $PHP_DIR/conf.php
 $CMD_CHMOD 640 $PHP_DIR/conf.php
 $CMD_CHMOD 600 $PHP_DIR/expire.php
@@ -95,19 +88,19 @@ $CMD_CHMOD 640 $WEB_DIR/user.php
 $CMD_CHMOD 600 $PHP_DIR/user_data.php
 $CMD_CHOWN root:apache $WEB_DIR/conf.php
 $CMD_CHOWN root:apache $WEB_DIR/user.php
- 
-$CMD_MYSQLADMIN password $MYSQL_ROOT_PASSWORD
-$CMD_MYSQLADMIN create $MYSQL_DB_NAME
-
-$CMD_ECHO "CREATE USER '$USER_LOGIN'@'localhost' IDENTIFIED BY '$MYSQL_USER_PASSWORD';" > $TMP_DIR/init.sql
-$CMD_ECHO "CREATE DATABASE $MYSQL_DB_NAME;" >> $TMP_DIR/init.sql
-$CMD_ECHO "GRANT ALL PRIVILEGES ON $MYSQL_DB_NAME.* TO '$USER_LOGIN'@'localhost';" >> $TMP_DIR/init.sql
-$CMD_ECHO "commit;" >> $TMP_DIR/init.sql
-$CMD_MYSQL < $TMP_DIR/init.sql
-$CMD_MYSQL $MYSQL_DB_NAME < $PRJ_DIR/int_user_login.sql
-$CMD_RM -f $TMP_DIR/init.sql
-
 $CMD_MKDIR -m 700 $TMP_DIR
+
+$CMD_MYSQLADMIN password $MYSQL_ROOT_PASSWORD
+echo "mysql root passwd: $MYSQL_ROOT_PASSWORD" > /root/int_user_login.credencials
+echo "mysql $USER_LOGIN passwd: $MYSQL_USER_PASSWORD" >> /root/int_user_login.credencials
+$CMD_CHMOD 400 /root/int_user_login.credencials
+
+$CMD_ECHO "CREATE DATABASE $MYSQL_DB_NAME;" > $TMP_DIR/init.sql
+$CMD_ECHO "CREATE USER '$USER_LOGIN'@'localhost' IDENTIFIED BY '$MYSQL_USER_PASSWORD';" >> $TMP_DIR/init.sql
+$CMD_ECHO "GRANT ALL PRIVILEGES ON $MYSQL_DB_NAME.* TO '$USER_LOGIN'@'localhost';" >> $TMP_DIR/init.sql
+$CMD_MYSQL -f < $TMP_DIR/init.sql
+$CMD_MYSQL -f $MYSQL_DB_NAME < $PRJ_DIR/int_user_login.sql
+$CMD_RM -f $TMP_DIR/init.sql
 
 $CMD_ECHO "done."
 $CMD_ECHO ""
@@ -115,3 +108,4 @@ $CMD_ECHO "Install nxlog on AD Server"
 $CMD_ECHO "Change ip 99.99.99.99 on nxlog.conf to syslog's IP address"
 $CMD_ECHO "Enable and start nxlog service"
 $CMD_ECHO "Add to local crontab \"* * * * * /opt/int_user_login/bin/parse_int_user_login.sh ; cd /opt/int_user_login/php/ ; /usr/bin/php expire.php\""
+$CMD_ECHO "SQL credential are saved in /root/int_user_login.credencials"
