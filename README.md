@@ -70,7 +70,7 @@ Para testar:
 <img width="470" height="86" alt="curl_test" src="https://github.com/user-attachments/assets/7883d472-5943-43e9-8c7f-11372bbf60e5" />
 
 
-No firewall é necessário criar alias com o Login do usuário e apontar para o serviço HTTP do servidor de log. O campo "Hours" indica refresh a cada minuto ( 0.01 =  minuto ). É recomendado alterar de acordo com a necessidade.
+No firewall, para a criação de regras de acesso é necessário primeiramente criar alias com o Login do usuário e apontar para o serviço HTTP do servidor de log. O campo "Hours" indica refresh a cada minuto ( 0.01 =  minuto ). É recomendado alterar de acordo com a necessidade. A partir desse ponto nas regras como origem pode ser usado o alias em questão.
 <img width="638" height="439" alt="user_alias" src="https://github.com/user-attachments/assets/e11ee8de-2e68-4fc6-b2ef-a76b619d38b0" />
 
 
